@@ -149,7 +149,7 @@ public class Interface {
       println("Clearing LED Array"); 
       leds.clear();
       println("Turning off physical LEDs"); 
-      network.clearLeds();
+      clearLeds();
     }
 
     // Create new LEDS

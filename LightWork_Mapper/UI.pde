@@ -598,11 +598,13 @@ public void map() {
     println("Binary pattern mapping started"); 
     videoMode = VideoMode.IMAGE_SEQUENCE;
     
-    backgroundImage = cam.copy();
-    backgroundImage.save(dataPath("backgroundImage.png")); // Save background image for debugging purposes
-
     blobManager.clearAllBlobs();
     blobManager.setBlobLifetime(frameSkip*10); // TODO: Replace hardcoded 10 with binary pattern length
+    
+    images.clear(); 
+    
+    backgroundImage = cam.copy();
+    backgroundImage.save(dataPath("backgroundImage.png")); // Save background image for debugging purposes
 
     animator.setMode(AnimationMode.BINARY);
     animator.resetPixels();

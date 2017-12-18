@@ -140,6 +140,7 @@ void setup()
   captureIndex = 0; 
   images = new ArrayList<PGraphics>();
   diff = createGraphics(camWidth, camHeight, P2D); 
+  backgroundImage = createImage(camWidth, camHeight, RGB); 
   background(0);
 }
 
@@ -160,7 +161,8 @@ void draw() {
 
   // Update the LEDs (before we do anything else). 
   animator.update();
-
+  //processCV(); 
+  
   // Video Input Assignment (Camera or Image Sequence)
   // Read the video input (webcam or videofile)
   if (videoMode == VideoMode.CAMERA && cam!=null ) { 
@@ -185,7 +187,6 @@ void draw() {
         captureTimer = 0;
       }
       videoInput = cam;
-      //processCV();
     }
 
     // If sequence exists, playback and decode
@@ -197,7 +198,7 @@ void draw() {
         currentFrame = 0;
       }
       // Background diff
-      processCV();
+      //processCV();
     }
     // Assign diff to videoInput
   }
@@ -209,9 +210,9 @@ void draw() {
     // Background diff
     blobManager.update(opencv.findContours()); 
     blobManager.display(); 
-    processCV();
+    //processCV();
   }
-
+  
   // Display the camera input
   camFBO.beginDraw();
   camFBO.image(videoInput, 0, 0);
@@ -222,15 +223,13 @@ void draw() {
   if (videoMode == VideoMode.IMAGE_SEQUENCE && images.size() >= numFrames) {
     blobManager.update(opencv.findContours()); 
     blobManager.display();
-    processCV();
+    //processCV();
     decode();
-
+    
+    
     if (shouldStartDecoding) {
       matchBinaryPatterns();
     }
-  }
-  else {
-    processCV();  
   }
 
   // Display OpenCV output and dots for detected LEDs (dots for sequential mapping only). 
@@ -265,7 +264,7 @@ void draw() {
   blobFBO.endDraw();
 
   // Draw the background image (dor debugging) 
-  
+  image(backgroundImage, camDisplayWidth, 70, 150, 100); 
   // Draw a sequence of the sequential captured frames
   if (images.size() > 0) {
     for (int i = 0; i < images.size(); i++) {
