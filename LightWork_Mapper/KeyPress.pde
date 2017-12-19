@@ -26,7 +26,7 @@ void keyPressed() {
   //}
 
   if (key == 'm') {
-    backgroundImage = videoInput.copy(); 
+    backgroundImage = cam.copy(); 
     animator.setFrameSkip(6);
     if (network.isConnected()==false) {
       println("please connect to a device before mapping");

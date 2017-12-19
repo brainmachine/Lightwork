@@ -29,7 +29,6 @@ import gab.opencv.*;
 import java.awt.Rectangle;
 
 Capture cam;
-Capture cam2;
 OpenCV opencv;
 
 ControlP5 cp5;
@@ -65,7 +64,7 @@ ArrayList <LED>     leds; // Global, used by Animator and Interface classes
 
 int FPS = 30; 
 
-PImage videoInput; 
+//PImage videoInput; 
 PImage cvOutput;
 
 // Image sequence stuff
@@ -73,6 +72,7 @@ int numFrames = 10;  // The number of frames in the animation
 int currentFrame = 0;
 ArrayList <PGraphics> images;
 PImage backgroundImage = new PImage();
+PGraphics backgroundPG = new PGraphics(); 
 PGraphics diff; // Background subtracted from Binary Pattern Image
 int imageIndex = 0;
 int captureTimer = 0; 
@@ -127,20 +127,21 @@ void setup()
 
   // Make sure there's always something in videoInput
   println("allocating videoInput with empty image");
-  videoInput = createImage(camWidth, camHeight, RGB);
+  //videoInput = createImage(camWidth, camHeight, RGB);
 
   // OpenCV Setup
   println("Setting up openCV");
-  opencv = new OpenCV(this, videoInput);
+  opencv = new OpenCV(this, cam);
 
   // Blob Manager
-  blobManager = new BlobManager(this, opencv); 
+  blobManager = new BlobManager(this); 
 
   // Image sequence
   captureIndex = 0; 
   images = new ArrayList<PGraphics>();
   diff = createGraphics(camWidth, camHeight, P2D); 
   backgroundImage = createImage(camWidth, camHeight, RGB); 
+  backgroundPG = createGraphics(camWidth, camHeight, P2D); 
   background(0);
 }
 
@@ -161,82 +162,28 @@ void draw() {
 
   // Update the LEDs (before we do anything else). 
   animator.update();
-  //processCV(); 
-  
-  // Video Input Assignment (Camera or Image Sequence)
+
   // Read the video input (webcam or videofile)
-  if (videoMode == VideoMode.CAMERA && cam!=null ) { 
+  if (cam.available() == true) { 
     cam.read();
-    videoInput = cam;
   } 
-  // Binary Image Sequence Capture and Decoding
-  else if (videoMode == VideoMode.IMAGE_SEQUENCE && cam.available() && isMapping) {
 
-    // Capture sequence if it doesn't exist
-    if (images.size() < numFrames) {
-      cam.read();
-      PGraphics pg = createGraphics(camWidth, camHeight, P2D);
-      pg.beginDraw();
-      pg.image(cam, 0, 0);
-      pg.endDraw();
-      captureTimer++;
-      if (captureTimer == animator.frameSkip/2) { // Capture halfway through animation frame
-        println("adding image frame to sequence");
-        images.add(pg);
-      } else if (captureTimer >= animator.frameSkip) { // Reset counter when frame is done
-        captureTimer = 0;
-      }
-      videoInput = cam;
-    }
-
-    // If sequence exists, playback and decode
-    else {
-      videoInput = images.get(currentFrame);
-      currentFrame++; 
-      if (currentFrame >= numFrames) {
-        shouldStartDecoding = true; // We've decoded a full sequence, start pattern matchin
-        currentFrame = 0;
-      }
-      // Background diff
-      //processCV();
-    }
-    // Assign diff to videoInput
-  }
-
-  // Calibration mode, use this to tweak your parameters before mapping
-  else if (videoMode == VideoMode.CALIBRATION && cam.available()) {
-    cam.read(); 
-    videoInput = cam; 
-    // Background diff
-    blobManager.update(opencv.findContours()); 
-    blobManager.display(); 
-    //processCV();
-  }
-  
   // Display the camera input
   camFBO.beginDraw();
-  camFBO.image(videoInput, 0, 0);
+  camFBO.image(cam, 0, 0);
   camFBO.endDraw();
   image(camFBO, 0, (70*guiMultiply), camDisplayWidth, camDisplayHeight);
-
-  // Decode image sequence
-  if (videoMode == VideoMode.IMAGE_SEQUENCE && images.size() >= numFrames) {
-    blobManager.update(opencv.findContours()); 
-    blobManager.display();
-    //processCV();
-    decode();
-    
-    
-    if (shouldStartDecoding) {
-      matchBinaryPatterns();
-    }
-  }
-
+  
+  processCV(); 
+  //opencv.loadImage(camFBO); 
+  //opencv.diff(backgroundImage);
+  //opencv.contrast(cvContrast); 
+  //opencv.threshold(cvThreshold);
+  
   // Display OpenCV output and dots for detected LEDs (dots for sequential mapping only). 
   cvFBO.beginDraw();
-  PImage snap = opencv.getSnapshot(); 
+  PImage snap = opencv.getOutput(); 
   cvFBO.image(snap, 0, 0, 640, 480);
-
   if (leds.size()>0) {
     for (LED led : leds) {
       if (led.coord.x!=0 && led.coord.y!=0) {
@@ -248,6 +195,63 @@ void draw() {
   }
   cvFBO.endDraw();
   image(cvFBO, camDisplayWidth, 70*guiMultiply, camDisplayWidth, camDisplayHeight);
+  
+  // Binary Image Sequence Capture and Decoding
+  if (videoMode == VideoMode.IMAGE_SEQUENCE && isMapping) {
+
+    // Capture sequence if it doesn't exist
+    if (images.size() < numFrames) {
+      PGraphics pg = createGraphics(camWidth, camHeight, P2D);
+      pg.beginDraw();
+      pg.image(cam, 0, 0);
+      pg.endDraw();
+      captureTimer++;
+      if (captureTimer == animator.frameSkip/2) { // Capture halfway through animation frame
+        println("adding image frame to sequence");
+        images.add(pg);
+      } else if (captureTimer >= animator.frameSkip) { // Reset counter when frame is done
+        captureTimer = 0;
+      }
+    }
+
+    // If sequence exists, playback and decode
+    else {
+
+      //videoInput = images.get(currentFrame);
+      currentFrame++; 
+      if (currentFrame >= numFrames) {
+        shouldStartDecoding = true; // We've decoded a full sequence, start pattern matchin
+        currentFrame = 0;
+      }
+      // Background diff
+      //processCV();
+    }
+  }
+
+  // Calibration mode, use this to tweak your parameters before mapping
+  else if (videoMode == VideoMode.CALIBRATION) {
+    // Background diff
+    //processCV(); 
+    blobManager.update(opencv.findContours()); 
+    blobManager.display();
+  }
+
+  
+
+  // Decode image sequence
+  if (videoMode == VideoMode.IMAGE_SEQUENCE && images.size() >= numFrames) {
+    blobManager.update(opencv.findContours()); 
+    blobManager.display();
+    //processCV();
+    decode();
+
+
+    if (shouldStartDecoding) {
+      matchBinaryPatterns();
+    }
+  }
+
+  
 
   if (isMapping) {
     //processCV(); 
@@ -369,11 +373,12 @@ void processCV() {
   diff.beginDraw(); 
   diff.background(0); 
   diff.blendMode(NORMAL); 
-  diff.image(videoInput, 0, 0); 
+  diff.image(cam, 0, 0); 
   diff.blendMode(SUBTRACT); 
   diff.image(backgroundImage, 0, 0); 
   diff.endDraw(); 
-  opencv.loadImage(diff); 
+  opencv.loadImage(cam); 
+  opencv.diff(diff); 
   opencv.contrast(cvContrast); 
   opencv.threshold(cvThreshold);
 }

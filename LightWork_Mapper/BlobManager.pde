@@ -25,7 +25,7 @@ class BlobManager {
   // Number of blobs detected over all time. Used to set IDs.
   int blobCount = 0; // Use this to assign new (unique) ID's to blobs
 
-  BlobManager(PApplet parent, OpenCV cv) {
+  BlobManager(PApplet parent) {
     this.parent = parent; 
     blobList = new ArrayList<Blob>();
   }

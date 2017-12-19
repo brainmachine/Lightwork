@@ -493,7 +493,7 @@ public void calibrate() {
   else if (videoMode != VideoMode.CALIBRATION) {
     blobManager.setBlobLifetime(frameSkip);
     videoMode = VideoMode.CALIBRATION; 
-    backgroundImage = videoInput.copy();
+    backgroundImage = cam.copy();
     backgroundImage.save("data/calibrationBackgroundImage.png");
     if ( patternMapping == true) {
       println("Calibration: pattern");
@@ -630,7 +630,7 @@ public void map2() {
     videoMode = VideoMode.IMAGE_SEQUENCE;
     animator.setMode(AnimationMode.BINARY);
     //animator.resetPixels();
-    backgroundImage = videoInput.copy();
+    backgroundImage = cam.copy();
     backgroundImage.save(dataPath("backgroundImage.png"));
     blobManager.setBlobLifetime(200); 
     isMapping=true;
