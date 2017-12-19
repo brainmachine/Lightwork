@@ -29,6 +29,7 @@ import gab.opencv.*;
 import java.awt.Rectangle;
 
 Capture cam;
+PImage videoInput; 
 OpenCV opencv;
 
 ControlP5 cp5;
@@ -142,6 +143,7 @@ void setup()
   diff = createGraphics(camWidth, camHeight, P2D); 
   backgroundImage = createImage(camWidth, camHeight, RGB); 
   backgroundPG = createGraphics(camWidth, camHeight, P2D); 
+  videoInput = createImage(camWidth, camHeight, RGB); 
   background(0);
 }
 
@@ -166,19 +168,20 @@ void draw() {
   // Read the video input (webcam or videofile)
   if (cam.available() == true) { 
     cam.read();
+    videoInput = cam; 
   } 
 
   // Display the camera input
   camFBO.beginDraw();
-  camFBO.image(cam, 0, 0);
+  camFBO.image(videoInput, 0, 0);
   camFBO.endDraw();
   image(camFBO, 0, (70*guiMultiply), camDisplayWidth, camDisplayHeight);
   
-  processCV(); 
-  //opencv.loadImage(camFBO); 
-  //opencv.diff(backgroundImage);
-  //opencv.contrast(cvContrast); 
-  //opencv.threshold(cvThreshold);
+  //processCV(); 
+  opencv.loadImage(videoInput); 
+  opencv.diff(backgroundImage);
+  opencv.contrast(cvContrast); 
+  opencv.threshold(cvThreshold);
   
   // Display OpenCV output and dots for detected LEDs (dots for sequential mapping only). 
   cvFBO.beginDraw();
@@ -217,7 +220,7 @@ void draw() {
     // If sequence exists, playback and decode
     else {
 
-      //videoInput = images.get(currentFrame);
+      videoInput = images.get(currentFrame);
       currentFrame++; 
       if (currentFrame >= numFrames) {
         shouldStartDecoding = true; // We've decoded a full sequence, start pattern matchin
@@ -240,7 +243,11 @@ void draw() {
 
   // Decode image sequence
   if (videoMode == VideoMode.IMAGE_SEQUENCE && images.size() >= numFrames) {
-    blobManager.update(opencv.findContours()); 
+    opencv.loadImage(videoInput);
+    opencv.contrast(cvContrast); 
+    opencv.threshold(cvThreshold);
+    
+    blobManager.update(opencv.findContours()); // This return contours, but also processes the opencv image 
     blobManager.display();
     //processCV();
     decode();
