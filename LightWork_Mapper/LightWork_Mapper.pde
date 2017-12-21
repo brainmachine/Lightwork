@@ -1,4 +1,4 @@
-/*  //<>// //<>//
+/* //<>//
  *  Lightwork-Mapper
  *  
  *  This sketch uses computer vision to automatically generate mapping for LEDs.
@@ -308,28 +308,6 @@ void sequentialMapping() {
   }
 }
 
-// TODO: implement this method in main pde properly
-//public void binaryMapping() {
-//  if (videoMode != VideoMode.IMAGE_SEQUENCE) {
-//    // Set frameskip so we have enough time to capture an image of each animation frame. 
-//    videoMode = VideoMode.IMAGE_SEQUENCE;
-//    animator.frameSkip = 18;
-//    animator.setMode(AnimationMode.BINARY);
-//    //animator.resetPixels();
-//    backgroundImage = videoInput.copy();
-//    backgroundImage.save("backgroundImage.png");
-//    blobLifetime = 200;
-//  } else {
-//    videoMode = VideoMode.CAMERA;
-//    animator.setMode(AnimationMode.OFF);
-//    animator.resetPixels();
-//    blobList.clear();
-//    shouldStartPatternMatching = false; 
-//    images.clear();
-//    currentFrame = 0;
-//  }
-//}
-
 void matchBinaryPatterns() {
   for (int i = 0; i < leds.size(); i++) {
     if (leds.get(i).foundMatch) {
@@ -388,9 +366,8 @@ void decode() {
   }
 }
 
-//Open CV processing functions
+// Open CV preliminary processing
 void processCV() {
-
   diff.beginDraw(); 
   diff.background(0); 
   diff.blendMode(NORMAL); 
@@ -401,11 +378,6 @@ void processCV() {
   opencv.loadImage(diff); 
   opencv.contrast(cvContrast); 
   opencv.threshold(cvThreshold);
-
-  //opencv.loadImage(videoInput);
-  //opencv.diff(backgroundImage); 
-  //opencv.contrast(cvContrast); 
-  //opencv.threshold(cvThreshold);
 }
 
 //Count LEDs that have been matched
@@ -420,7 +392,6 @@ int listMatchedLEDs() {
 //return LED locations as PVectors
 ArrayList<PVector> getLEDVectors(ArrayList<LED> l) {
   ArrayList<PVector> loc= new ArrayList<PVector>();
-  //println("l size: "+l.size());
 
   for (int i = 0; i<l.size(); i++) {
     PVector temp=new PVector();
@@ -428,12 +399,10 @@ ArrayList<PVector> getLEDVectors(ArrayList<LED> l) {
     loc.add(temp);
   } 
 
-  //println("loc:");
-  //printArray(loc);
   return loc;
 }
 
-//Estimate LED z location from left and right captures
+// Estimate LED Z-coordinate from left and right captures
 void calculateZ(PVector[] l, PVector[] r) {
   for (int i = 0; i<l.length; i++) {
     if (l[i].x!=0 && l[i].y!=0 && r[i].x!=0 && r[i].y!=0) {
@@ -443,7 +412,7 @@ void calculateZ(PVector[] l, PVector[] r) {
   }
 }
 
-//deterimines bounding box of points for normalizing
+// Deterimines bounding box of points for normalizing
 float[] getMinMaxCoords(ArrayList<PVector> pointsCopy) {
   //ArrayList<PVector> pointsCopy = new ArrayList<PVector>(points);
 
@@ -479,7 +448,7 @@ float[] getMinMaxCoords(ArrayList<PVector> pointsCopy) {
   return out;
 }
 
-//normalize point coordinates 
+// Normalize point coordinates 
 ArrayList<LED> normCoords(ArrayList<LED> in)
 {
   float[] norm = new float[6];
@@ -548,7 +517,7 @@ void saveCSV(ArrayList <LED> ledArray, String path) {
   println("Exported CSV File to "+path);
 }
 
-//Console warranty  and OS info
+// Console warranty  and OS info
 void warranty() {
   println("Lightwork-Mapper"); 
   println("Copyright (C) 2017  Leó Stefánsson and Tim Rolls @PWRFL"); 
@@ -558,14 +527,14 @@ void warranty() {
   println("Operating System: "+os);
 }
 
-//Closes connections (once deployed as applet)
+// Closes connections (once deployed as applet)
 void stop()
 {
   cam =null; 
   super.stop();
 }
 
-//Closes connections
+// Closes connections
 void exit()
 {
   cam =null; 

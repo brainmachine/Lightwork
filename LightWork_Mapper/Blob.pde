@@ -7,6 +7,8 @@
  *  @author: Jordi Tost (@jorditost)
  * 
  *  University of Applied Sciences Potsdam, 2014
+ * 
+ *  Modified by Leó Stefánsson and Tim Rolls, 2017
  */
 
 class Blob {

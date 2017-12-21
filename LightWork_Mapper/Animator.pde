@@ -42,7 +42,6 @@ public class Animator {
     ledIndex = 0; // TODO: resetInternalVariables() method?
     testIndex = 0;
     frameCounter = 0;
-    //resetPixels();
   }
 
   AnimationMode getMode() {
