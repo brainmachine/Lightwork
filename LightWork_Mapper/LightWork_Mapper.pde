@@ -352,7 +352,6 @@ void matchBinaryPatterns() {
     }
   }
   
-  
   // Mapping is done, Save CSV for LEFT or RIGHT channels
   // TODO: refactor. Maybe this method should return true when done, and then call saveCSV()
   if (stereoMode ==true && mapRight==true) {

@@ -15,6 +15,8 @@ public class BinaryPattern {
   int patternLength; // 10 bit pattern with a START at the end and an OFF after each one
   int numBits;
 
+  int patternOffset;
+  
   StringBuffer decodedString; 
   int writeIndex; // For writing detected bits
 
@@ -27,6 +29,8 @@ public class BinaryPattern {
   BinaryPattern() {
     numBits = 10;
     patternLength = 10; // TODO: Can we use numBits for this?
+    patternOffset = 512; // We need to offset by the half the maximum decimal representation of the binary string. 
+                         // This makes sure all of the blobs are visible in the first frame
     frameNum = 0; // Used for animation
     writeIndex = 0; 
 
@@ -42,9 +46,9 @@ public class BinaryPattern {
   }
 
   // Generate Binary patterns for animation sequence and pattern-matching
-  void generatePattern(int num) {
+  void generatePattern(int addr) {
     // Convert int to String of fixed length
-    String s = Integer.toBinaryString(num); 
+    String s = Integer.toBinaryString(patternOffset+addr); 
     // TODO: string format, use numBits instead of hardcoded 10
     s = String.format("%10s", s).replace(" ", "0"); // Insert leading zeros to maintain pattern length
     patternString = s;
