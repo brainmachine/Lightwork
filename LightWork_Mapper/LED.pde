@@ -15,11 +15,13 @@ public class LED {
   BinaryPattern binaryPattern;
   PVector coord;
   boolean foundMatch;
+  int numBits; // Length of binary pattern
 
   LED() {
     c = color(0, 0, 0);
     address = 0;
     coord = new PVector(0, 0);
+    numBits = 10;
     bPatternOffset = 682; 
     binaryPattern = new BinaryPattern();
     foundMatch = false; 
@@ -39,4 +41,10 @@ public class LED {
   void setCoord(PVector coordinates) {
     coord.set( coordinates.x, coordinates.y);
   }
+  
+  void setNumBits(int num) {
+    numBits = num;
+    binaryPattern.numBits = numBits; 
+  }
+  
 }

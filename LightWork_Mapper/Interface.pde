@@ -34,6 +34,7 @@ public class Interface {
   int                  numStrips = 8;
   int                  numLeds = ledsPerStrip*numStrips;
   int                  ledBrightness;
+  int                  numBits; 
 
   //Pixelpusher objects
   DeviceRegistry registry;
@@ -50,6 +51,7 @@ public class Interface {
 
   Interface() {
     mode = device.NULL;
+    numBits = 10; // Default to 10
     populateLeds();
     println("Interface created");
   }
@@ -158,6 +160,7 @@ public class Interface {
       LED temp= new LED();
       leds.add(temp);
       leds.get(i).setAddress(i);
+      leds.get(i).setNumBits(numBits); 
     }
   }
 

@@ -23,8 +23,6 @@ public class BinaryPattern {
 
   String binaryPatternString; 
   int[]  binaryPatternVector;
-  String animationPatternString;
-  int[]  animationPatternVector;
 
   int frameNum;
 
@@ -43,8 +41,10 @@ public class BinaryPattern {
 
     binaryPatternVector = new int[numBits];
     binaryPatternString = "";
-    animationPatternVector = new int[animationPatternLength];
-    animationPatternString = "";
+  }
+  
+  void setNumBits(int num) {
+    numBits = num;
   }
 
   // Generate Binary patterns for animation sequence and pattern-matching
