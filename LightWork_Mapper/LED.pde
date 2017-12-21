@@ -35,7 +35,7 @@ public class LED {
   void setAddress(int addr) {
     address = addr;
     binaryPattern.generatePattern(address+bPatternOffset);
-    println("LED Address: "+addr+" pattern: "+binaryPattern.binaryPatternString);
+    println("LED Address: "+addr+" pattern: "+binaryPattern.patternString);
   }
 
   void setCoord(PVector coordinates) {

@@ -336,7 +336,7 @@ void matchBinaryPatterns() {
       //println("Already found match for LED: "+leds.get(i).address); 
       continue;
     }
-    String targetPattern = leds.get(i).binaryPattern.binaryPatternString.toString(); 
+    String targetPattern = leds.get(i).binaryPattern.patternString.toString(); 
     //println("finding target pattern: "+targetPattern);
     for (int j = 0; j < blobManager.blobList.size(); j++) {
       String decodedPattern = blobManager.blobList.get(j).detectedPattern.decodedString.toString(); 
@@ -352,7 +352,7 @@ void matchBinaryPatterns() {
     }
   }
   
-  //map(); // Toggle mapping off
+  
   // Mapping is done, Save CSV for LEFT or RIGHT channels
   // TODO: refactor. Maybe this method should return true when done, and then call saveCSV()
   if (stereoMode ==true && mapRight==true) {
@@ -364,7 +364,8 @@ void matchBinaryPatterns() {
     arrayCopy(  getLEDVectors(leds).toArray(), leftMap);
     saveCSV(leds, dataPath("left.csv"));
   }
-
+  
+  map(); // Toggle mapping off
 }
 
 void decode() {

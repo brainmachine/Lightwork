@@ -18,8 +18,8 @@ public class BinaryPattern {
   StringBuffer decodedString; 
   int writeIndex; // For writing detected bits
 
-  String binaryPatternString; 
-  int[]  binaryPatternVector;
+  String patternString; 
+  int[]  patternVector;
 
   int frameNum;
 
@@ -33,8 +33,8 @@ public class BinaryPattern {
     decodedString = new StringBuffer(numBits); // Init with capacity
     decodedString.append("W123456789");
 
-    binaryPatternVector = new int[numBits];
-    binaryPatternString = "";
+    patternVector = new int[numBits];
+    patternString = "";
   }
   
   void setNumBits(int num) {
@@ -47,18 +47,18 @@ public class BinaryPattern {
     String s = Integer.toBinaryString(num); 
     // TODO: string format, use numBits instead of hardcoded 10
     s = String.format("%10s", s).replace(" ", "0"); // Insert leading zeros to maintain pattern length
-    binaryPatternString = s;
+    patternString = s;
 
     // Convert Binary String to Vector of Ints
-    for (int i = 0; i < binaryPatternVector.length; i++) {
-      char c = binaryPatternString.charAt(i);
+    for (int i = 0; i < patternVector.length; i++) {
+      char c = patternString.charAt(i);
       int x = Character.getNumericValue(c);
-      binaryPatternVector[i] = x;
+      patternVector[i] = x;
     }
   }
 
   void advance() {
-    state = binaryPatternVector[frameNum];
+    state = patternVector[frameNum];
     frameNum = frameNum+1;
     if (frameNum >= patternLength) {
       frameNum = 0;

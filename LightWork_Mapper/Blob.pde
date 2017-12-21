@@ -32,8 +32,8 @@ class Blob {
 
 
   // Make me
-  Blob(PApplet parent, int id, Contour c) {
-    this.parent = parent;
+  Blob(PApplet p, int id, Contour c) {
+    this.parent = p;
     this.id = id;
     this.contour = new Contour(parent, c.pointMat);
     this.available = true;
