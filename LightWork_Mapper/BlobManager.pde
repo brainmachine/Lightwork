@@ -19,7 +19,6 @@ class BlobManager {
   float distanceThreshold = 2; 
   int lifetime = 200; 
 
-  //ArrayList<Contour> contours;
   // List of detected contours parsed as blobs (every frame)
   ArrayList<Contour> newBlobs;
   // List of my blob objects (persistent)
@@ -33,15 +32,11 @@ class BlobManager {
     contourFinder= new OpenCV(this.parent, createImage(camWidth, camHeight, RGB));
   }
 
+  // cvOutput should be a binary representation of the LED video feed. (contrast and threshold already applied)
   void update(PImage cvOutput) {
     contourFinder.loadImage(cvOutput); 
-     
-    // Find all contours
-    //blobCV.loadImage(opencv.getSnapshot());
-    //ArrayList<Contour> contours = opencv.findContours();
-
     // Filter contours, remove contours that are too big or too small
-    // The filtered results are our 'Blobs' (Should be detected LEDs)
+    // The filtered results are our 'Blobs'
     ArrayList<Contour> newBlobs = filterContours(contourFinder.findContours()); // Stores all blobs found in this frame
 
     // Note: newBlobs is actually of the Contours datatype
@@ -101,8 +96,8 @@ class BlobManager {
       }
     }
 
-    // Update the blob age
-    //for (int i = blobList.size()-1; i > 0; i--) {
+    // Update the blob age for all blobs in the list
+    // TODO: iterate backwards
     for (int i = 0; i < blobList.size(); i++) {
       Blob b = blobList.get(i);
       b.countDown();
@@ -113,9 +108,7 @@ class BlobManager {
   }
 
   void display() {
-
     for (Blob b : blobList) {
-      strokeWeight(1);
       b.display();
     }
   }

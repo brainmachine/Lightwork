@@ -53,6 +53,7 @@ class Blob {
     float y = map(r.y, 0, (float)camHeight, (float)camArea.y, camArea.y+camArea.height);
 
     noFill();
+    strokeWeight(1);
     stroke(255, 0, 0);
     rect(x, y, r.width, r.height);
   }
