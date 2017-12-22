@@ -42,6 +42,7 @@ class Blob {
     this.timer = blobManager.lifetime; // TODO: Synchronize with Blob class and/or UI
 
     detectedPattern = new BinaryPattern();
+    detectedPattern.generatePattern(network.numLeds);
     brightness = 0; 
     previousFrameCount = 0;
   }

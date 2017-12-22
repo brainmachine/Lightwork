@@ -165,7 +165,7 @@ void draw() {
 
   //UI is drawn on canvas background, update to clear last frame's UI changes
   background(#222222);
-
+  numFrames = leds.get(0).binaryPattern.patternLength; 
   // Update the LEDs (before we do anything else). 
   animator.update();
 
@@ -182,7 +182,7 @@ void draw() {
   // Binary Image Sequence Capture
   if (videoMode == VideoMode.IMAGE_SEQUENCE && isMapping) {
     // Capture sequence if it doesn't exist
-    if (images.size() < numFrames) {
+    if (images.size() < numFrames) { // Assuming all patterns are the same length (they should be)
       PGraphics pg = createGraphics(camWidth, camHeight, P2D);
       pg.beginDraw();
       pg.image(videoInput, 0, 0);
@@ -311,14 +311,14 @@ void sequentialMapping() {
 void matchBinaryPatterns() {
   for (int i = 0; i < leds.size(); i++) {
     if (leds.get(i).foundMatch) {
-      //println("Already found match for LED: "+leds.get(i).address); 
+      println("Already found match for LED: "+leds.get(i).address); 
       continue;
     }
     String targetPattern = leds.get(i).binaryPattern.patternString.toString(); 
-    //println("finding target pattern: "+targetPattern);
+    println("finding target pattern: "+targetPattern);
     for (int j = 0; j < blobManager.blobList.size(); j++) {
       String decodedPattern = blobManager.blobList.get(j).detectedPattern.decodedString.toString(); 
-      //println("checking match with decodedPattern: "+decodedPattern);
+      println("checking match with decodedPattern: "+decodedPattern);
       if (targetPattern.equals(decodedPattern)) {
         leds.get(i).foundMatch = true; 
         Rectangle rect = blobManager.blobList.get(j).contour.getBoundingBox(); 
