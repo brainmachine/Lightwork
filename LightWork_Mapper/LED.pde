@@ -41,9 +41,5 @@ public class LED {
     coord.set( coordinates.x, coordinates.y);
   }
   
-  void setNumBits(int num) {
-    numBits = num;
-    binaryPattern.numBits = numBits; 
-  }
   
 }

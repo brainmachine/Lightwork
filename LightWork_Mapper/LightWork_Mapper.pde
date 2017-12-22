@@ -317,7 +317,7 @@ void matchBinaryPatterns() {
     String targetPattern = leds.get(i).binaryPattern.patternString.toString(); 
     println("finding target pattern: "+targetPattern);
     for (int j = 0; j < blobManager.blobList.size(); j++) {
-      String decodedPattern = blobManager.blobList.get(j).detectedPattern.decodedString.toString(); 
+      String decodedPattern = blobManager.blobList.get(j).detectedPattern.patternString.toString(); 
       println("checking match with decodedPattern: "+decodedPattern);
       if (targetPattern.equals(decodedPattern)) {
         leds.get(i).foundMatch = true; 
