@@ -1,4 +1,4 @@
-/* //<>//
+/* //<>// //<>//
  *  BinaryPattern Generator Class
  *  
  *  This class generates binary patterns used in matching LED addressed to physical locations
@@ -37,31 +37,32 @@ public class BinaryPattern {
   // Generate Binary patterns for animation sequence and pattern-matching
   void generatePattern(int addr) {
     // How many LEDs do we have?
-    int nLeds = network.getNumLeds();  // TODO: refactor this so I don't have to reference another object instance in here
+    int nLeds = 192;//network.getNumLeds();  // TODO: refactor this so I don't have to reference another object instance in here
     println("nLeds: "+nLeds); 
 
     // Find the required pattern length for nLeds
     // Create binary representation of nLeds
     String bString = new String(binary(nLeds)); // Produces a lot of leading zeros
     patternString = new StringBuffer(bString.split("1", 2)[1]);
-    patternString.insert(0, "1"); // The above line splits one "1" off, add it again. Add an extra leading 1 to double the address space (all patterns have to start with 1)
+    patternString.insert(0, "11"); // The above line splits one "1" off, add it again. Add an extra leading 1 to double the address space (all patterns have to start with 1)
 
     // Create a binary representation of the maximum decimal value in our address space. 
     StringBuffer maxBinaryValue = new StringBuffer(); 
     maxBinaryValue.append(patternString); 
-    //println("max binaryValue (pre-replacement): "+maxBinaryValue); 
+    println("max binaryValue (pre-replacement): "+maxBinaryValue); 
+    println("maxBinaryValue.lenght(): "+maxBinaryValue.length());
     for (int i = 0; i < maxBinaryValue.length(); i++) {
-      maxBinaryValue.replace(i, i+1, "11");
+      maxBinaryValue.replace(i, i+1, "1");
     }
-    //println("max binaryValue: "+maxBinaryValue); 
+    println("max binaryValue: "+maxBinaryValue); 
     int maxDecimalValue = unbinary(maxBinaryValue.toString()); 
     
     // Set Pattern Offset to half the maximum decimal value
     patternOffset = maxDecimalValue/2; 
-    //println("pattern offset: "+patternOffset);
+    println("pattern offset: "+patternOffset);
     
     // Create actual binary pattern
-    patternString = null;
+    //patternString = null;
     patternString = new StringBuffer(binary(patternOffset+addr));
     patternString = new StringBuffer(patternString.toString().split("1", 2)[1]);
     patternString.insert(0, "11");
@@ -70,14 +71,6 @@ public class BinaryPattern {
     // Get the pattern length
     patternLength = patternString.length();
     println("patternLength: "+patternLength); 
-    
-    // Make sure the decoded string is of the same length as the pattern string
-    //decodedString = new StringBuffer(patternLength);
-    //for (int i = 0; i < patternLength; i++) {
-    //  decodedString.insert(i, "W"); 
-    //}
-    //println("Decoded string (not decoded yet, on init): "+decodedString); 
-
   }
 
   void advance() {

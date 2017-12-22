@@ -1,4 +1,4 @@
-/* //<>//
+/* //<>// //<>//
  *  Lightwork-Mapper
  *  
  *  This sketch uses computer vision to automatically generate mapping for LEDs.
@@ -165,7 +165,8 @@ void draw() {
 
   //UI is drawn on canvas background, update to clear last frame's UI changes
   background(#222222);
-  numFrames = leds.get(0).binaryPattern.patternLength; 
+  
+  //numFrames = leds.get(0).binaryPattern.patternLength; 
   // Update the LEDs (before we do anything else). 
   animator.update();
 

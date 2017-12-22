@@ -164,7 +164,7 @@ public class Interface {
     }
 
     // Create new LEDS
-    println("Creating LED Array"); 
+    println("Creating LED Array for numLeds: "+numLeds); 
     for (int i = 0; i < numLeds; i++) {
       LED temp= new LED();
       leds.add(temp);
