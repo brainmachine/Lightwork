@@ -1,4 +1,4 @@
-/*
+/* //<>//
  *  BinaryPattern Generator Class
  *  
  *  This class generates binary patterns used in matching LED addressed to physical locations
@@ -16,12 +16,12 @@ public class BinaryPattern {
   int numBits;
 
   int patternOffset;
-  
+
   StringBuffer decodedString; 
   int writeIndex; // For writing detected bits
 
-  String patternString; 
-  int[]  patternVector;
+  StringBuffer patternString; 
+  //int[]  patternVector;
 
   int frameNum;
 
@@ -30,39 +30,62 @@ public class BinaryPattern {
     numBits = 10;
     patternLength = 10; // TODO: Can we use numBits for this?
     patternOffset = 512; // We need to offset by the half the maximum decimal representation of the binary string. 
-                         // This makes sure all of the blobs are visible in the first frame
+    // This makes sure all of the blobs are visible in the first frame
     frameNum = 0; // Used for animation
     writeIndex = 0; 
 
     decodedString = new StringBuffer(numBits); // Init with capacity
     decodedString.append("W123456789");
 
-    patternVector = new int[numBits];
-    patternString = "";
+    //patternVector = new int[numBits];
+    patternString = new StringBuffer(); 
   }
-  
+
   void setNumBits(int num) {
     numBits = num;
   }
 
   // Generate Binary patterns for animation sequence and pattern-matching
   void generatePattern(int addr) {
-    // Convert int to String of fixed length
-    String s = Integer.toBinaryString(patternOffset+addr); 
-    // TODO: string format, use numBits instead of hardcoded 10
-    s = String.format("%10s", s).replace(" ", "0"); // Insert leading zeros to maintain pattern length
-    patternString = s;
+    // How many LEDs do we have?
+    int nLeds = network.getNumLeds();  // TODO: refactor this so I don't have to reference another object instance in here
+    println("nLeds: "+nLeds); 
 
-    // Convert Binary String to Vector of Ints
-    for (int i = 0; i < patternVector.length; i++) {
-      char c = patternString.charAt(i);
-      int x = Character.getNumericValue(c);
-      patternVector[i] = x;
+    // Find the required pattern length for nLeds
+    // Create binary representation of nLeds
+    String bString = new String(binary(nLeds)); // Produces a lot of leading zeros
+    patternString = new StringBuffer(bString.split("1", 2)[1]);
+    patternString.insert(0, "11"); // The above line splits one "1" off, add it again. Add an extra leading 1 to double the address space (all patterns have to start with 1)
+
+    // Get the pattern length
+    patternLength = patternString.length();
+    println("patternLength: "+patternLength); 
+    
+    // Create a binary representation of the maximum decimal value in our address space. 
+    StringBuffer maxBinaryValue = new StringBuffer(); 
+    maxBinaryValue.append(patternString); 
+    println("max binaryValue (pre-replacement): "+maxBinaryValue); 
+    for (int i = 0; i < maxBinaryValue.length(); i++) {
+      maxBinaryValue.replace(i, i+1, "1");
     }
+    println("max binaryValue: "+maxBinaryValue); 
+    int maxDecimalValue = unbinary(maxBinaryValue.toString()); 
+    
+    // Set Pattern Offset to half the maximum decimal value
+    patternOffset = maxDecimalValue/2; 
+    println("pattern offset: "+patternOffset);
+    
+    // Create actual binary pattern
+    patternString = null;
+    patternString = new StringBuffer(binary(patternOffset+addr));
+    patternString = new StringBuffer(patternString.toString().split("1", 2)[1]);
+    patternString.insert(0, "11");
+    println("patternString (with offet): " + patternString);
+
   }
 
   void advance() {
-    state = patternVector[frameNum];
+    state = Character.getNumericValue(patternString.charAt(frameNum)); // TODO: Replace pattern vector with patternString.charAt() (needs conversion to int...)
     frameNum = frameNum+1;
     if (frameNum >= patternLength) {
       frameNum = 0;
@@ -73,11 +96,10 @@ public class BinaryPattern {
   void writeNextBit(int bit) {
     String s =  String.valueOf(bit);
     decodedString.replace(this.writeIndex, this.writeIndex+1, s);
-    
+
     this.writeIndex++; 
     if (writeIndex >= patternLength) {
       writeIndex = 0;
     }
   }
-  
 }

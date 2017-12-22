@@ -28,12 +28,13 @@ public class Interface {
   device              mode;
 
   //LED defaults
-  String               IP = "fade2.local";
-  int                  port = 7890;
-  int                  ledsPerStrip = 64; // TODO: DOn't hardcode this
-  int                  numStrips = 8;
-  int                  numLeds = ledsPerStrip*numStrips;
+  String               IP;
+  int                  port;
+  int                  ledsPerStrip; // TODO: DOn't hardcode this
+  int                  numStrips;
+  int                  numLeds;
   int                  ledBrightness;
+              
 
   //Pixelpusher objects
   DeviceRegistry registry;
@@ -48,9 +49,15 @@ public class Interface {
   //Constructor
   /////////////////////////////////////////////////////////////
 
+  // You need to make sure populateLeds() gets called when contruction is done
+  // That can be achieved by calling populateLeds() directly, or calling setNumLeds() or setLedsPerStrip() which will call populateLeds() for you.
   Interface() {
     mode = device.NULL;
-    populateLeds();
+    IP = "fade2.local";
+    port = 7890;
+    numStrips = 8;
+    ledsPerStrip = 64;
+    numLeds = ledsPerStrip*numStrips;
     println("Interface created");
   }
 
@@ -76,9 +83,12 @@ public class Interface {
   int getNumLedsPerStrip() {
     return ledsPerStrip;
   }
-
+  
+  int getNumLeds() {
+     return numLeds;  
+  }
+  
   void setNumStrips(int num) {
-    //ofLogNotice("animator") << "setNumStrips(): " << num;
     numStrips = num;
     numLeds = ledsPerStrip*numStrips;
     populateLeds(); 
@@ -222,7 +232,7 @@ public class Interface {
   
   //open connection to controller
   void connect(PApplet parent) {
-    //if (isConnected) {
+    //if (isConnected) { //<>//
     //  shutdown();
     //}
 

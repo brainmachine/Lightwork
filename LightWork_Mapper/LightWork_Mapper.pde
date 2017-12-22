@@ -37,7 +37,7 @@ Animator animator;
 Interface network; 
 BlobManager blobManager; 
 
-int captureIndex; // For capturing each binary state (decoding later). 
+int captureIndex; // For capturing each binary state (decoding happens later). 
 boolean isMapping = false;
 
 enum  VideoMode {
@@ -79,8 +79,9 @@ PImage backgroundImage = new PImage();
 PGraphics diff; // Background subtracted from Binary Pattern Image
 int imageIndex = 0;
 int captureTimer = 0; 
-boolean shouldStartPatternMatching; // Only start matching once we've decoded a full sequence
 boolean shouldStartDecoding; // Start decoding once we've captured all binary pattern states
+boolean shouldStartPatternMatching; // Only start matching once we've decoded a full sequence
+
 
 void setup()
 {
@@ -108,7 +109,6 @@ void setup()
   network = new Interface();
   network.setNumStrips(3);
   network.setNumLedsPerStrip(50); // TODO: Fix these setters...
-  //network.populateLeds();
 
   // Animator
   println("creating animator");
