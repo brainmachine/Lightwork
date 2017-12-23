@@ -312,21 +312,21 @@ void sequentialMapping() {
 void matchBinaryPatterns() {
   for (int i = 0; i < leds.size(); i++) {
     if (leds.get(i).foundMatch) {
-      println("Already found match for LED: "+leds.get(i).address); 
+      //println("Already found match for LED: "+leds.get(i).address); 
       continue;
     }
     String targetPattern = leds.get(i).binaryPattern.patternString.toString(); 
-    println("finding target pattern: "+targetPattern);
+    //println("finding target pattern: "+targetPattern);
     for (int j = 0; j < blobManager.blobList.size(); j++) {
       String decodedPattern = blobManager.blobList.get(j).detectedPattern.patternString.toString(); 
-      println("checking match with decodedPattern: "+decodedPattern);
+      if (i == 0) {println("checking match with decodedPattern: "+decodedPattern);}
       if (targetPattern.equals(decodedPattern)) {
         leds.get(i).foundMatch = true; 
         Rectangle rect = blobManager.blobList.get(j).contour.getBoundingBox(); 
         PVector pvec = new PVector(); 
         pvec.set((float)rect.getCenterX(), (float)rect.getCenterY()); 
         leds.get(i).setCoord(pvec); 
-        println("LED: "+i+" Blob: "+j+" --- "+targetPattern + " --- " + decodedPattern);
+        //println("LED: "+i+" Blob: "+j+" --- "+targetPattern + " --- " + decodedPattern);
       }
     }
   }
