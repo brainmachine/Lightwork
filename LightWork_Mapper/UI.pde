@@ -34,6 +34,12 @@ Rectangle camArea;
 
 int frameSkip = 20;
 
+int uiGrid = 60*guiMultiply;
+int uiSpacing = 20*guiMultiply;
+int buttonHeight = 30*guiMultiply;
+int buttonWidth =150*guiMultiply;
+int topBarHeight = 70*guiMultiply; //
+
 void buildUI() {
   println("setting up ControlP5");
 
@@ -50,11 +56,7 @@ void buildUI() {
 
   float startTime = millis(); 
   println("Building UI... at time: " + startTime);
-  int uiGrid = 60*guiMultiply;
-  int uiSpacing = 20*guiMultiply;
-  int buttonHeight = 30*guiMultiply;
-  int buttonWidth =150*guiMultiply;
-  int topBarHeight = 70*guiMultiply;
+
 
   println("Creating font...");
   PFont pfont = createFont("OpenSans-Regular.ttf", 12*guiMultiply, false); // use true/false for smooth/no-smooth
@@ -529,7 +531,7 @@ public void saveLayout() {
     println("No point data to save, run mapping first");
     return;
   } else if (stereoMode == true && leftMap!=null && rightMap!=null) {
-    calculateZ(leftMap,rightMap);
+    calculateZ(leftMap, rightMap);
     File sketch = new File(savePath);
     selectOutput("Select a file to write to:", "fileSelected", sketch);
     //saveCSV(normCoords(leds), savePath);

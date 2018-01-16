@@ -248,18 +248,18 @@ void draw() {
 
   // Draw a sequence of the sequential captured frames
   if (images.size() > 0) {
+    Rectangle frameSize = new Rectangle(0, 0, width/leds.get(0).binaryPattern.patternLength, int(width/leds.get(0).binaryPattern.patternLength/camAspect));
     for (int i = 0; i < images.size(); i++) {
-      image(images.get(i), i*width/10, /*70+*/camDisplayHeight, width/10, height/10);
+      image(images.get(i), i*frameSize.width, camDisplayHeight+topBarHeight-frameSize.height, frameSize.width, frameSize.height);
     }
     stroke(255, 0, 0); 
     strokeWeight(3);
     noFill(); 
-    rect(currentFrame*width/10, camDisplayHeight, width/10, height/10); //TODO: make this length adjustable
+    rect(currentFrame*frameSize.width, camDisplayHeight+topBarHeight-frameSize.height, frameSize.width, frameSize.height); //TODO: make this length adjustable
   }
 
   showLEDOutput(); 
   showBlobCount(); //TODO: display during calibration/ after mapping
-  //processCV();
 
   // -------------------------------------------------------
   //                      MAPPING
@@ -280,10 +280,9 @@ void draw() {
 
     if (shouldStartPatternMatching) {
       matchBinaryPatterns();
-    }//else {
-
-    //}
-  } else if (isMapping && !patternMapping) {
+    }
+  } 
+  else if (isMapping && !patternMapping) {
     blobManager.update(opencv.getOutput());
     if (frameCount%frameSkip==0) {
       sequentialMapping();
