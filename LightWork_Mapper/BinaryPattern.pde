@@ -38,7 +38,6 @@ public class BinaryPattern {
   void generatePattern(int addr) {
     // How many LEDs do we have?
     int nLeds = network.getNumLeds();  // TODO: refactor this so I don't have to reference another object instance in here
-    //println("nLeds: "+nLeds); 
 
     // Find the required pattern length for nLeds
     // Create binary representation of nLeds
@@ -60,10 +59,8 @@ public class BinaryPattern {
     
     // Set Pattern Offset to half the maximum decimal value
     patternOffset = maxDecimalValue/2; 
-    //println("pattern offset: "+patternOffset);
     
     // Create actual binary pattern
-    //patternString = null;
     patternString = new StringBuffer(binary(patternOffset+addr+1));
     patternString = new StringBuffer(patternString.toString().split("1", 2)[1]);
     patternString.insert(0, "1");

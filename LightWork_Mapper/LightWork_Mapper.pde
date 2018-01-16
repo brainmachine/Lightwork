@@ -72,7 +72,7 @@ PImage videoInput;
 PImage cvOutput;
 
 // Image sequence stuff
-int numFrames = 10;  // The number of frames in the animation
+//int numFrames = 10;  // The number of frames in the animation
 int currentFrame = 0;
 ArrayList <PGraphics> images;
 PImage backgroundImage = new PImage();
@@ -183,7 +183,7 @@ void draw() {
   // Binary Image Sequence Capture
   if (videoMode == VideoMode.IMAGE_SEQUENCE && isMapping) {
     // Capture sequence if it doesn't exist
-    if (images.size() < numFrames) { // Assuming all patterns are the same length (they should be)
+    if (images.size() < leds.get(0).binaryPattern.patternLength) { // Assuming all patterns are the same length (they should be)
       PGraphics pg = createGraphics(camWidth, camHeight, P2D);
       pg.beginDraw();
       pg.image(videoInput, 0, 0);
@@ -201,7 +201,7 @@ void draw() {
       shouldStartDecoding = true; 
       videoInput = images.get(currentFrame);
       currentFrame++; 
-      if (currentFrame >= numFrames) {
+      if (currentFrame >= leds.get(0).binaryPattern.patternLength) {
         shouldStartPatternMatching = true; // We've decoded a full sequence, start pattern matchin
         currentFrame = 0;
       }
@@ -271,13 +271,12 @@ void draw() {
   }
 
   // Decode image sequence
-  else if (videoMode == VideoMode.IMAGE_SEQUENCE && images.size() >= numFrames) {
+  else if (videoMode == VideoMode.IMAGE_SEQUENCE && images.size() >= leds.get(0).binaryPattern.patternLength) {
     blobManager.update(opencv.getSnapshot());
     blobManager.display();
     if (shouldStartDecoding) {
       decode();
     }
-
 
     if (shouldStartPatternMatching) {
       matchBinaryPatterns();
