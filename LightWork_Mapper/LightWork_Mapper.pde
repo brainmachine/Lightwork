@@ -496,6 +496,28 @@ void saveCSV(ArrayList <LED> ledArray, String path) {
   println("Exported CSV File to "+path);
 }
 
+void exportToMadMapper(ArrayList <LED> ledArray, String path) {
+  PrintWriter output; 
+  output = createWriter(path);
+
+  //write vals out to file, start with csv header
+  output.println("fixtureDefinition,"+"universe,"+"startChannel,"+"startPosX,"+"startPosY,"+"endPosX,"+"fixtureWidth"); 
+  String fixtureDefinition = "Generic - Pixel RGB";
+  
+  
+  for (int i = 0; i < ledArray.size(); i++) {
+    int address = ledArray.get(i).address+1; // Address space is 1-512, not 0-511
+    float x = ledArray.get(i).coord.x;
+    float y = ledArray.get(i).coord.y;
+    
+    output.println(fixtureDefinition+","+ 0+"," +address +","+ x +","+ y+","+ x+","+ y+","+ 1); 
+    //output.println(ledArray.get(i).address+","+ledArray.get(i).coord.x+","+ledArray.get(i).coord.y+","+ledArray.get(i).coord.z); 
+  }
+  output.close(); // Finishes the file
+  println("Exported MadMapper CSV File to "+path);
+}
+
+
 // Console warranty  and OS info
 void warranty() {
   println("Lightwork-Mapper"); 

@@ -48,6 +48,10 @@ void keyPressed() {
      cvFBO.save("future_binary_close.png");
   }
   
+  if (key == '9') {
+   exportToMadMapper(leds, "madmap_layout.csv"); 
+  }
+  
   // Capture Image sequence
   // When we are done capturing an image sequence, switch to videoMode = VideoMode.IMAGE_SEQUENCE
   //if (key == 'i') {

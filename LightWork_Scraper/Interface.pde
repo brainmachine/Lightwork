@@ -279,7 +279,7 @@ public class Interface {
           color c = colors[i]; 
           
           int br = int(min(red(c), green(c), blue(c))); // White tracks the minimum color channel value
-          println(min(red(c), green(c), blue(c)));
+          //println(min(red(c), green(c), blue(c)));
           for (int j = 3; j < numArtnetChannels; j++) {
             artnetPacket[index+j] = byte(br); // White 
           }
