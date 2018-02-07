@@ -502,15 +502,17 @@ void exportToMadMapper(ArrayList <LED> ledArray, String path) {
 
   //write vals out to file, start with csv header
   output.println("fixtureDefinition,"+"universe,"+"startChannel,"+"startPosX,"+"startPosY,"+"endPosX,"+"fixtureWidth"); 
-  String fixtureDefinition = "Generic - Pixel RGB";
+  String fixtureDefinition = "Generic - Pixel RGBWL";
   
   
   for (int i = 0; i < ledArray.size(); i++) {
     int address = ledArray.get(i).address+1; // Address space is 1-512, not 0-511
     float x = ledArray.get(i).coord.x;
     float y = ledArray.get(i).coord.y;
+    float x2 = x+5; 
+    float y2 = y+5; 
     
-    output.println(fixtureDefinition+","+ 0+"," +address +","+ x +","+ y+","+ x+","+ y+","+ 1); 
+    output.println(fixtureDefinition+","+ 0+"," +address +","+ x +","+ y+","+ x2+","+ y2+","+ 1); 
     //output.println(ledArray.get(i).address+","+ledArray.get(i).coord.x+","+ledArray.get(i).coord.y+","+ledArray.get(i).coord.z); 
   }
   output.close(); // Finishes the file
